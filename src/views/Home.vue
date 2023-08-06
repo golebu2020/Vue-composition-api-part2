@@ -1,19 +1,34 @@
 <template>
   <div class="home">
     <h1>Home</h1>
+    <div v-if="error">
+      {{ error }}
+    </div>
+    <div v-if="posts.length">
+      <PostList :posts="posts" />
+    </div>
+    <div v-else>Loading...</div>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import getPosts from "../composables/getPosts";
+
+import PostList from "@/components/PostList.vue";
 export default {
   name: "Home",
+  components: {
+    PostList,
+  },
   setup() {
-    const posts = ref([
-      { title: "welcome to the blog", body: "Lorem ipsum", id: 1 },
-      { title: "welcome to the blog", body: "Lorem ipsum", id: 1 },
-    ]);
-    return { posts };
+    const { posts, error, load } = getPosts(0);
+    load();
+    return { posts, error };
   },
 };
 </script>
+<style>
+.home {
+  text-align: left;
+}
+</style>
